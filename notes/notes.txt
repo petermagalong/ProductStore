@@ -10,3 +10,7 @@ https://neon.com/docs/guides/node
 
 -- Frontend Notes
 https://v3.tailwindcss.com/docs/guides/vite
+https://daisyui.com/docs/themes/#list-of-themes
+
+npm i -D daisyui@latest
+npm i react-hot-toast react-router-dom axios zustand lucide-react
