@@ -1,5 +1,12 @@
 https://arcjet.com/
 -- copy ARCJET_KEY
 
+https://app.arcjet.com/sites/site_01k574c94nfhnbmv7g7a1vzpfn/sdk-configuration?first-install
+
 https://console.neon.tech/app/projects/autumn-union-04610656/branches/br-cold-boat-adnc76yd/tables
 -- database table login gmail
+
+https://neon.com/docs/guides/node
+
+-- Frontend Notes
+https://v3.tailwindcss.com/docs/guides/vite
