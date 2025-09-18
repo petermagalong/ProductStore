@@ -1,4 +1,4 @@
-import express, { request } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 import productRoutes from './routes/productRoutes.js';
 import { sql } from './config/db.js';
-
+import { aj } from './lib/arcjet.js'
 dotenv.config();
 
 const app = express();
@@ -17,17 +17,18 @@ app.use(cors());
 app.use(helmet()); // helmet helps to secure Express apps by setting various HTTP headers
 app.use(morgan('dev')); // morgan is HTTP request logger middleware for node.js
 
+// Arcjet middleware
+//https://docs.arcjet.com/get-started?f=node-js-express
 app.use(async (req, res, next) => {
     try {
         const decision = await aj.protect(req,{
-            request:1
-        })
-        console.log('Arcjet decision:', decision);
+            requested:1
+        });
         if (decision.isDenied()) {
-            if(decision.reason.isRateLimited()) {
+            if (decision.reason.isRateLimit()) {
                 res.status(429).json({ error: 'Too Many Requests' });
-            } else if(decision.reason.isBot()) {
-                res.status(403).json({ error: 'Bot access denied' });
+            } else if (decision.reason.isBot()) {
+                res.status(403).json({ error: 'Bot access denied' });   
             } else {
                 res.status(403).json({ error: 'Forbidden' });
             }
@@ -36,6 +37,7 @@ app.use(async (req, res, next) => {
 
         // check for spoofed bots
         if(decision.results.some((result) => result.reason.isBot() && result.reason.isSpoofed())) {
+            console.log('Spoofed bot detected');
             res.status(403).json({ error: 'Bot access denied' });
             return;
         }
@@ -48,7 +50,6 @@ app.use(async (req, res, next) => {
 });
 
 // Routes
-
 app.use('/api/products', productRoutes);
 
 
